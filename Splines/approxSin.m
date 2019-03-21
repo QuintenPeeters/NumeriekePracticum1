@@ -1,6 +1,6 @@
 function approxSin()
 
-    aantal_punten = 100;
+    aantal_punten = 7;
 
     x = 0:2*pi/(aantal_punten-1):2*pi;
     fprintf('%s points.\n',num2str(length(x)));

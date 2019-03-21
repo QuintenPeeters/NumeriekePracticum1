@@ -8,7 +8,7 @@ function y = periospline(x,f,t)
     % y is een (d x N) matrix met in de d rijen de gevalueerde splines
     % in de punten t
     
-    Punten_per_spline = 20;
+    Punten_per_spline = 500;
     
     [d, n] = size(f);
     N = length(t);
@@ -86,8 +86,8 @@ function y = makeSpline(x, f)
     for j = 1:n
 
         y{j} = @(t)( ( f ( j+1 ) * ( t-x ( j ) ) + ( f ( j ) * ( x ( j+1 )-t ) ) )/delta(x, j+1) ...
-            + (1/6)*( (t-x(j)).^3/delta(x, j+1) - delta(x, j+1)*(t - x(j)) )*(s(j+1)) ...
-            - (1/6)*( (t-x(j)).^3/delta(x, j+1) + delta(x, j+1)*(x(j+1)-t) )*(s(j)) );
+            + (1/6)*( power(t-x(j), 3)/delta(x, j+1) - delta(x, j+1)*(t - x(j)) )*(s(j+1)) ...
+            - (1/6)*( power(t-x(j), 3)/delta(x, j+1) + delta(x, j+1)*(x(j+1)-t) )*(s(j)) );
     end
 
 end
