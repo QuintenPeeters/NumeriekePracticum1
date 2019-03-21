@@ -8,23 +8,30 @@ function y = periospline(x,f,t)
     % y is een (d x N) matrix met in de d rijen de gevalueerde splines
     % in de punten t
     
-    Punten_per_spline = 500;
+    Punten_per_spline = 5000;
     
     [d, n] = size(f);
+    
+    % use the periodicity
+    f = [f, f(:, 1)];
+    
     N = length(t);
     
     y = zeros(d, N);
 
     for i = 1:d
        yy = f(i, :);
-       yy(n+1) = f(i, 1);
        func = makeSpline(x, yy);
-       
+       plot(x(1),yy(1),'-o');
+       hold on
        for k = 1:n
            xx = x(k):delta(x, k+1)/Punten_per_spline:x(k+1);
            h = func{k}(xx);
            plot (xx, h);
            hold on;
+           plot(x(k+1),yy(k+1),'-o');
+           hold on;
+
        end
        
        Y = zeros(1, N);
@@ -38,6 +45,10 @@ function y = periospline(x,f,t)
        
     end
     
+    xlabel('x');
+    ylabel('sin(x) + sin(4*x)/2');
+    title("sin(x) + sin(4*x)/2 with " + length(x) + " points");
+    
     hold off
     
 end
@@ -50,7 +61,7 @@ function y = makeSpline(x, f)
         
     n = length(x)-1;
     coefMatrix = zeros(n+1, n+1);
-    rechterlid = zeros(1, n+1);
+    rechterlid = zeros(n+1, 1);
     
     % first row
     coefMatrix(1, 1) = 2*(delta(x, n+1)+delta(x, 2));
@@ -74,9 +85,7 @@ function y = makeSpline(x, f)
         
         rechterlid(i) = (delta(f, i+1)/delta(x, i+1)) - (delta(f, i)/delta(x, i));
     end
-    
-    rechterlid = transpose(rechterlid);
-    
+        
     % s'' vector wordt dan
     global s;
     s = coefMatrix\rechterlid;
@@ -85,9 +94,9 @@ function y = makeSpline(x, f)
     
     for j = 1:n
 
-        y{j} = @(t)( ( f ( j+1 ) * ( t-x ( j ) ) + ( f ( j ) * ( x ( j+1 )-t ) ) )/delta(x, j+1) ...
-            + (1/6)*( power(t-x(j), 3)/delta(x, j+1) - delta(x, j+1)*(t - x(j)) )*(s(j+1)) ...
-            - (1/6)*( power(t-x(j), 3)/delta(x, j+1) + delta(x, j+1)*(x(j+1)-t) )*(s(j)) );
+        y{j} = @(t)((f(j+1) * (t - x(j)) + (f(j) * ( x(j+1) - t )))/delta(x, j+1) ...
+            + (1/6) * (power((t - x(j)), 3)/delta(x, j+1) - delta(x, j+1)*( t - x(j)) )*(s(j+1)) ...
+            - (1/6)*( power((t-x(j+1)), 3)/delta(x, j+1) + delta(x, j+1)*(x(j+1)-t) )*(s(j)) );
     end
 
 end
