@@ -60,25 +60,25 @@ function y = makeSpline(x, f)
     % f is de vector van functiewaarden van lengte n+1
         
     n = length(x)-1;
-    coefMatrix = zeros(n+1, n+1);
-    rechterlid = zeros(n+1, 1);
+    coefMatrix = zeros(n, n);
+    rechterlid = zeros(n, 1);
     
     % first row
     coefMatrix(1, 1) = 2*(delta(x, n+1)+delta(x, 2));
     coefMatrix(1, 2) = delta(x, 2);
-    coefMatrix(1, n+1) = delta(x, n+1);
+    coefMatrix(1, n) = delta(x, n+1);
     
     rechterlid(1) = (delta(f, 2)/delta(x, 2)) - (delta(f, n+1)/delta(x, n+1));
     
     %last row
-    coefMatrix(n+1, 1) = delta(x, n+1);
-    coefMatrix(n+1, n) = delta(x, n);
-    coefMatrix(n+1, n+1) = 2*(delta(x, n)+delta(x, n+1));
+    coefMatrix(n, 1) = delta(x, n+1);
+    coefMatrix(n, n-1) = delta(x, n);
+    coefMatrix(n, n) = 2*(delta(x, n)+delta(x, n+1));
     
-    rechterlid(n+1) = (delta(f, n+1)/delta(x, n+1)) - (delta(f, n)/delta(x, n));
+    rechterlid(n) = (delta(f, n+1)/delta(x, n+1)) - (delta(f, n)/delta(x, n));
 
     
-    for i = 2:n
+    for i = 2:n-1
         coefMatrix(i, i-1) = delta(x, i);
         coefMatrix(i, i) = 2*(delta(x, i)+delta(x, i+1));
         coefMatrix(i, i+1) = delta(x, i+1);
@@ -87,16 +87,16 @@ function y = makeSpline(x, f)
     end
         
     % s'' vector wordt dan
-    global s;
     s = coefMatrix\rechterlid;
+    s = [s;s(1)];
    
     y = cell(n, 1);
     
     for j = 1:n
 
-        y{j} = @(t)((f(j+1) * (t - x(j)) + (f(j) * ( x(j+1) - t )))/delta(x, j+1) ...
-            + (1/6) * (power((t - x(j)), 3)/delta(x, j+1) - delta(x, j+1)*( t - x(j)) )*(s(j+1)) ...
-            - (1/6)*( power((t-x(j+1)), 3)/delta(x, j+1) + delta(x, j+1)*(x(j+1)-t) )*(s(j)) );
+        y{j} = @(t)( (f(j+1)*(t-x(j)) + f(j)*(x(j+1)-t))/delta(x, j+1) ...
+            + (1/6)*s(j+1)*(power((t-x(j)), 3)/delta(x, j+1) - delta(x, j+1)*(t-x(j)) ) ...
+            - (1/6)*s(j)*(power((t-x(j+1)), 3)/delta(x,j+1) + delta(x, j+1)*(x(j+1)-t)));
     end
 
 end
