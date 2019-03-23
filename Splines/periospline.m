@@ -87,7 +87,7 @@ function y = makeSpline(x, f)
     end
         
     % s'' vector wordt dan
-    s = coefMatrix\rechterlid;
+    s = mldivide(coefMatrix, rechterlid);
     s = [s;s(1)];
    
     y = cell(n, 1);

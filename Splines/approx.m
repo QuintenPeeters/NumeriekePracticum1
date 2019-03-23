@@ -1,6 +1,6 @@
 function approx()
 
-    aantal_punten = 9;
+    aantal_punten = 8;
 
     x = 0:2*pi/(aantal_punten-1):2*pi;
     fprintf('%s points.\n',num2str(length(x)));
