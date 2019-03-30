@@ -1,12 +1,25 @@
 function approx()
-
-    aantal_punten = 8;
-
-    x = 0:2*pi/(aantal_punten-1):2*pi;
-    fprintf('%s points.\n',num2str(length(x)));
-    y = sin(x);
-    y = y(1:end-1);
-    t = x;
     
-    periospline(x, y, t);
+    aantal_punten = 20;
+    aantal_punten_per_spline = 500;
+
+    
+    figure;
+	axis([0 1 0 1]);
+	axis manual
+	title('Click left to draw polyline, click right to terminate')
+	hold on;
+    A = click();
+    hold off;
+    
+    [~, n] = size(A);
+    
+    x = 0:1:n;
+    y = A;
+    t = (0:n/(aantal_punten_per_spline*aantal_punten-1):n);
+    
+    
+    Y = periospline(x, y, t);
+    plot(Y(1, :), Y(2, :));
+    hold off;
 end

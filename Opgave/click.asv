@@ -2,7 +2,11 @@ function A = click
 
 	% initialiseer figuur
 
-
+	figure;
+	axis([0 1 0 1]);
+	axis manual
+	title('Click left to draw polyline, click right to terminate')
+	hold on;
 
 	% herhaal tot andere dan linkermuisknop ingedrukt
 	x = []; y = [];
@@ -17,5 +21,6 @@ function A = click
 			end
 			plot(px,py,'+');
 		end
-    end
-    A = [x; y];
+	end
+`   A = 
+	hold off;
