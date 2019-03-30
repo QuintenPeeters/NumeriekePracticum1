@@ -34,11 +34,6 @@ function y = periospline(x,f,t)
        
     end
     
-    xlabel('x');
-    %ylabel('sin(x) + sin(4*x)/2');
-    %title("sin(x) + sin(4*x)/2 with " + length(x) + " points");
-    
-    hold off
     
 end
 
