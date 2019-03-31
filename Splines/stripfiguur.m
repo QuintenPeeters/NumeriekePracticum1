@@ -18,7 +18,9 @@ function stripfiguur()
     hold off
     for k=1:aantal_vormen
         [~, n] = size(AA{k});
-
+        
+        % TODO: x veranderen van de index naar de afstand tussen de
+        % opeenvolgende punten
         x = 0:1:n;
         y = AA{k};
         t = (0:n/(aantal_punten_per_spline*aantal_punten-1):n);
